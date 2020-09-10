@@ -1,17 +1,18 @@
-import React, { Component } from 'react';
+import React  from 'react';
 import NavBar from './Components/Headers'
-import LoginTab from './Components/LoginForm'
+//import LoginTab from './Components/LoginForm'
 import './App.css';
-import { BrowserRouter, Switch , Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
-import RegForm from './Components/Regiser'
-import Homescreen from './Components/home'
-import {useAuth,getAuthToken} from "../src/Services/auth";
-import Layout from './Components/Layout';
+//import RegForm from './Components/Regiser'
+//import Homescreen from './Components/home'
+//import {useAuth,getAuthToken} from "../src/Services/auth";
+//import Layout from './Components/Layout';
 import Router from './Components/Router';
 import AuthDataProvider from './helpers/AuthDataProvider';
-import Auth from './Services/Authenticate';
+//import Auth from './Services/Authenticate';
 import { GlobalProvider } from './Context/GlobalState';
+import { SnackbarProvider } from 'notistack';
 //export default class App extends Component {
   // constructor(props){
   //   super(props);
@@ -25,14 +26,15 @@ export default function App() {
   // render(){
     return (
       <BrowserRouter>
+      <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
       <AuthDataProvider>
-	<GlobalProvider>
-	
-		<Router/>
+	       <GlobalProvider>
+	           <NavBar/>
+		        <Router/>
             {/* <Layout></Layout>  */}
-</GlobalProvider>
+        </GlobalProvider>
              </AuthDataProvider>
-	
+	       </SnackbarProvider>
           {/* <Router/> */}
       </BrowserRouter>
     );

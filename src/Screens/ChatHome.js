@@ -1,23 +1,26 @@
-import React, { useContext, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Chats from '../Components/Chat/Chats';
-import FetchChats from '../Components/Chat/FetchChats';
-import Grid from '@material-ui/core/Grid';
-import { Widget } from 'react-chat-widget';
+import React from 'react';
+//import { makeStyles } from '@material-ui/core/styles';
+//import FetchChats from '../Components/Chat/FetchChats';
+
 import 'react-chat-widget/lib/styles.css';
+// import BottomBar from '../Components/Chat/BottomBar';
 
-
+// import Users from '../Components/Chat/Users';
+import Chats from '../Components/Chat/Chats';
 
 export default function ChatHome(){
 
 
-
+console.log("asd")
 
 
 return(
-    <div className="App">
-	<Chats/>
+    <div >
+	{/*<Chats/>
       <FetchChats/>
+      <BottomBar/>*/}
+     {/* <MessengerHome/>   */}
+	<Chats/>
     </div>
 
 );

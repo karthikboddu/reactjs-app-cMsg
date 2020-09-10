@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { checkIsAuthenticated, authSignUp, authLogin, authLogout, checkLogin } from './auth'
-import {getAuthToken,isLogin,useAuth,getAuth}  from "./auth";
+import {  authLogout } from './auth'
+import {getAuth}  from "./auth";
 import { userLogin,userRegister } from "./services";
 export const AuthContext = React.createContext({})
 
 export default function Auth({ children }) {
 
     const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [isLoading, setIsLoading] = useState(true)
+    //const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         checkAuth()
@@ -18,6 +18,9 @@ export default function Auth({ children }) {
     const checkAuth = () => getAuth()
         .then( setIsAuthenticated(true),console.log(isAuthenticated))
         .catch((error =>{
+            enqueueSnackbar('Could not Authenticate', {
+                    variant: 'error',
+                })
             setIsAuthenticated(false)
         }) )
        
@@ -26,6 +29,9 @@ export default function Auth({ children }) {
         .then(setIsAuthenticated(true))
         .catch(error => {
             alert(error)
+                enqueueSnackbar('Could not Authenticate', {
+                    variant: 'error',
+                })
             setIsAuthenticated(false)
         })
 
@@ -37,12 +43,15 @@ export default function Auth({ children }) {
     const signUp = credentials => userRegister(credentials)
         .then(setIsAuthenticated(true))
         .catch(error => {
+            enqueueSnackbar('Could not Authenticate', {
+                    variant: 'error',
+                })
             alert(error)
             setIsAuthenticated(false)
         })
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, isLoading, login, logout, signUp }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout, signUp }}>
             {children}
         </AuthContext.Provider>
     )

@@ -1,6 +1,6 @@
-import React, { createContext, useState, useEffect, useMemo, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from 'axios';
-import {getAuthToken,isLogin,useAuth,getAuth,authLogout}  from "../Services/auth";
+import {getAuthToken,authLogout}  from "../Services/auth";
 export const AuthDataContext = createContext(null);
 
 const initialAuthData = {};
@@ -23,15 +23,15 @@ const AuthDataProvider = props => {
 
 		// 	}
 		// })
-console.log("use")
     const fetchData = async () => {
       const result = await axios(
-        'http://127.0.0.1:8000/api/user',{
+        `${process.env.REACT_APP_API_URL}/api/user`,{
     headers: { 'Authorization': 'Bearer' + getAuthToken() }
     }
       );
-console.log(result.data.user,"status")
+
       if(result.data.user){
+        localStorage.setItem("uid",result.data.user.id)
         setAuthData(true);
       }else{
 	setAuthData(false)

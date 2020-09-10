@@ -1,8 +1,8 @@
 import axios from 'axios';
 import {getAuthToken} from './auth';
-
+axios.defaults.credentials =true
 function userLogin(email, password) {
-    return axios.post('http://127.0.0.1:8000/api/login',
+    return axios.post(`${process.env.REACT_APP_API_URL}/api/login`,
         {
             email: email,
             password: password
@@ -13,8 +13,8 @@ function userLogin(email, password) {
 function userRegister(firstName, lastName, email, password) {
     /**
      * fetching registration data and sending request to backend
-     */
-    return axios.post('http://127.0.0.1:8000/api/register', {
+     */ 
+    return axios.post(`${process.env.REACT_APP_API_URL}/api/register`, {
 
         //firstName: firstName,
         //lastName: lastName,

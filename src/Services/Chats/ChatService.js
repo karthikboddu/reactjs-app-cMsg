@@ -2,12 +2,9 @@ import axios from 'axios';
 import {getAuthToken} from '../auth';
 
 export async function addChats(data) {
-    return await axios.post('http://127.0.0.1:8000/api/channels/2/messages',{
-
-        //firstName: firstName,
-        //lastName: lastName,
-	username: 'Test',
-        message: data.name
+    console.log("Data",data)
+    return await axios.post(`${process.env.REACT_APP_API_URL}/api/messages`,data, {
+        headers: { 'Authorization': 'Bearer' + getAuthToken() }
     }
     )
 }
@@ -17,7 +14,7 @@ export async function addChats(data) {
 export async function getChatMessages(){
 
 
-    return await axios.get('http://127.0.0.1:8000/api/channels/2/messages',{
+    return await axios.get(`${process.env.REACT_APP_API_URL}/api/channels/2/messages`,{
 
         //firstName: firstName,
         //lastName: lastName,
@@ -35,22 +32,55 @@ export async function getChatMessages(){
 
 
 
-export async function getChatMessagesByUser(){
+export async function getChatMessagesByUser(id){
 
 
-    return await axios.get('http://127.0.0.1:8000/api/chatMessages',{
-
-        //firstName: firstName,
-        //lastName: lastName,
-	//username: 'Test',
-        //message: data.name
-    },{
+    return await axios.get(`${process.env.REACT_APP_API_URL}/api/conversations/query/`+id,{
 		headers: { 'Authorization': 'Bearer' + getAuthToken() }
     }
     )
 
 
 
+}
+export async function getRecentMessagesByUser(){
+
+
+    return await axios.get(`${process.env.REACT_APP_API_URL}/api/conversations/getRecentMessagesByUser`,{
+        headers: { 'Authorization': 'Bearer' + getAuthToken() }
+    }
+    )
+
 
 
 }
+
+
+export async function getAllUsersChatMessages(){
+
+
+    return await axios.get(`${process.env.REACT_APP_API_URL}/api/getAllUserchatMessages`,{
+		headers: { 'Authorization': 'Bearer' + getAuthToken() }
+    }
+    )
+
+}
+
+export async function getAllChatUsers(){
+
+
+    return await axios.get(`${process.env.REACT_APP_API_URL}/api/getAllUsers`,{
+        headers: { 'Authorization': 'Bearer' + getAuthToken() }
+    }
+    )
+
+}
+
+
+
+
+
+
+
+
+

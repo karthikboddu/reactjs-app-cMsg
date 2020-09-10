@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-
+import  { Redirect } from 'react-router-dom'
+import React from 'react';
 export const useAuth = auth => {
+
 	const [authenticated, setAuthenticated] = useState(null);
 	const [user, setUser] = useState(null);
-  
 	useEffect(() => { 
 		//auth
 		getAuth().then(res=>{
@@ -43,11 +44,14 @@ export const useAuth = auth => {
   };
 
 
+  	 
+export  function getAuthToken() {
 
-export function getAuthToken() {
 	var userInfo = JSON.parse(localStorage.getItem('currentUser'));
 	if (userInfo) {
 		return userInfo.token;
+	}else{
+		return <Redirect to='/login'  />
 	}
 }
 
@@ -58,19 +62,19 @@ export function setAuthToken(data) {
 
 export function isLogin() {
 	console.log(checkLogin(),"checkLogin");
-	var login = checkLogin();
+	// var login = checkLogin();
 	return checkLogin();
 }
 
  export  async function getAuth() {
-    return await axios.get('http://127.0.0.1:8000/api/user', {
+    return await axios.get(`${process.env.REACT_APP_API_URL}/api/user`, {
 		headers: { 'Authorization': 'Bearer' + getAuthToken() }
     })
 }
 
 export function checkLogin(){
 
-	axios.get('http://127.0.0.1:8000/api/user', {
+	axios.get(`${process.env.REACT_APP_API_URL}/api/user`, {
 		headers: { 'Authorization': 'Bearer' + getAuthToken() }
 	}).then(response => {
 		if (response.data) {
@@ -85,7 +89,7 @@ export function checkLogin(){
 export function authLogout(){
        
 
-	axios.get('http://127.0.0.1:8000/api/logout', {
+	axios.get(`${process.env.REACT_APP_API_URL}/api/logout`, {
 		headers: { 'Authorization': 'Bearer' + getAuthToken() }
 	}).then(response => {
 		if (response.data) {

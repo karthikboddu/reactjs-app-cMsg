@@ -1,146 +1,82 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import FilledInput from '@material-ui/core/FilledInput';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import Button from '@material-ui/core/Button';
-import { useForm, ErrorMessage } from "react-hook-form";
-import { userLogin,addItems } from "../../Services/services";
-import { useHistory } from "react-router-dom";
-import { setAuthToken } from "../../Services/auth";
-import {getAuthToken,isLogin,useAuth}  from "../../Services/auth";
-import {addChats} from  "../../Services/Chats/ChatService";
-import {useAuthDataContext} from "../../helpers/AuthDataProvider"
-import { AuthContext } from '../../Services/Authenticate'
-import { GlobalContext } from '../../Context/GlobalState';
+// import List from '@material-ui/core/List';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: '10px'
-  },
-  margin: {
-    margin: theme.spacing(1),
-  },
+
+
+import Conversations from './Conversations';
+import Users from './Users';
+import ChatBox from './ChatBox';
+const useStyles = makeStyles(theme => ({
+    paper: {
+        minHeight: 'calc(100vh - 64px)',
+        borderRadius: 0,
+    },
+    sidebar: {
+        zIndex: 8,
+    },
+    subheader: {
+        display: 'flex',
+        alignItems: 'center',
+        cursor: 'pointer',
+    },
+    globe: {
+        backgroundColor: theme.palette.primary.dark,
+    },
+    subheaderText: {
+        color: theme.palette.primary.dark,
+    },
 }));
 
-export default function AddItems() {
+const Chats = () => {
+    const [scope, setScope] = useState('Global Chat');
+    const [tab, setTab] = useState(0);
+    const [user, setUser] = useState(null);
+    const classes = useStyles();
 
-  const { user, onLogout,onLogin } = useAuthDataContext();
-  //const [authenticated, usero] = useAuth(getAuthToken());
-  //const { isAuthenticated, login } = useContext(AuthContext)
-  const classes = useStyles();
-  const { register, handleSubmit, errors } = useForm();
-  const {sendMessages } = useContext(GlobalContext);
-  const [state, setState] = React.useState({
-    name: '',
-    price: '',
-    quantity: '',
-    message: '',
-  })
-  let history = useHistory();
+    const handleChange = (e, newVal) => {
+        setTab(newVal);
+    };
 
-
-  //const [name, setName] = React.useState('Composed TextField');
-
-  const handleChange = (event) => {
-
-    setState({ ...state, [event.target.id]: event.target.value })
-  }
-  const onSubmit = (data) => {
-    console.log(data);
- //addChats(data);
-sendMessages(data)
-	//addProducts(data)
-  /*  addItems(data)
-      .then((res) => {
-        if (res.data) {
-
-        } else {
-          setState({ ...state, message: res.data.message })
-        }
-
-        console.log("responce from backend", res);
-      })
-      .catch((err) => {
-
-
-
-        console.log(err);
-
-      });
-*/
-  };
-
-
-
-
-	return (
-
-
-    <Grid container className={classes.root} direction="row" justify="center" alignItems="center">
-     
-      <form noValidate autoComplete="off">
-        <Grid container spacing={3}>
-          <Grid item sm={12}>
-            <FormControl>
-              <TextField id="outlined-name" name="name"
-                label="Name"
-                type="name"
-                inputRef={
-                  register({
-                    required: 'Name Required',
-                  })
-                }
-                fullWidth
-                error={errors.name ? true : false}
-                variant="outlined" />
-            </FormControl>
-            <ErrorMessage errors={errors} name="name" >
-              {({ message }) => <p>{message}</p>}
-            </ErrorMessage>
-          </Grid>
-        </Grid>
-
-
-
-
-        {/* <div className={classes.margin}>
-          <Grid container spacing={1} alignItems="flex-end">
-            <Grid item>
-              <AccountCircle />
+    return (
+        <React.Fragment>
+            
+            <Grid container>
+                <Grid item md={4} className={classes.sidebar}>
+                    <Paper className={classes.paper} square elevation={5}>
+                        <Paper square>
+                            <Tabs
+                                onChange={handleChange}
+                                variant="fullWidth"
+                                value={tab}
+                                indicatorColor="primary"
+                                textColor="primary"
+                            >
+                                <Tab label="Chats" />
+                                <Tab label="Users" />
+                            </Tabs>
+                        </Paper>
+                        {tab === 0 && (
+                            <Conversations
+                                setUser={setUser}
+                                setScope={setScope}
+                            />
+                        )}
+                        {tab === 1 && (
+                            <Users setUser={setUser} setScope={setScope} />
+                        )}
+                    </Paper>
+                </Grid>
+                <Grid item md={8}>
+                    <ChatBox scope={scope} user={user} />
+                </Grid> 
             </Grid>
-            <Grid item>
-              <TextField id="input-with-icon-grid" label="With a grid" ref={register} />
-            </Grid>
-          </Grid>
-        </div> */}
+        </React.Fragment>
+    );
+};
 
-        <Grid container spacing={1}>
-          <Grid item sm={12}>
-            <Button variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>
-              Add Item
-            </Button>
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={1}>
-          <Grid item sm={12}>
-            <div>{state.message}</div>
-          </Grid>
-        </Grid>
-      </form>
-
-    </Grid>
-
-  );
-
-}
-
+export default Chats;

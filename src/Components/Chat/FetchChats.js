@@ -1,116 +1,86 @@
-import React from 'react';
+import React, { useEffect ,useContext} from 'react';
+//import { getItems} from "../../Services/services";
 
-import io from 'socket.io-client';
-
-import Paper from '@material-ui/core/Paper';
+import { GlobalContext } from '../../Context/GlobalState';
+//import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
-import BottomBar from './BottomBar';
+//import BottomBar from './BottomBar';
 import './Chats.css';
+import io from 'socket.io-client';
+import Paper from '@material-ui/core/Paper';
 
-class FetchChats extends React.Component {
-  constructor(props) {
-    super(props);
+const useStyles = makeStyles((theme) => ({
+  root: {
 
-    this.state = {
-      chat: [],
-      content: '',
-      name: '',
-    };
-  }
+ margin: '50px'
+  },
+  margin: {
+    margin: theme.spacing(0),
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+}));
 
-  componentDidMount() {
-    this.socket = io('http://localhost:4000');
 
-    // Load the last 10 messages in the window.
-    this.socket.on('init', (msg) => {
-      this.setState((state) => ({
-        chat: [...state.chat, ...msg.reverse()],
-      }), this.scrollToBottom);
+
+
+
+
+
+export default function FetchChats(){
+
+
+
+  const classes = useStyles();
+//const [products, setProducts] = useState([]);
+const { chatMessages, getMessages } = useContext(GlobalContext);
+//const { receiver_id, setReceiver_id } = useState('1');
+console.log("view")
+	useEffect(() => { 
+    const socket = io('http://localhost:4000');
+
+    socket.on('laravel_database_N:App\\Events\\MessageSent', (msg) => {
+console.log("msg",msg)
     });
 
-    // Update the chat if a new message is broadcasted.
-    this.socket.on('push', (msg) => {
-      this.setState((state) => ({
-        chat: [...state.chat, msg],
-      }), this.scrollToBottom);
-    });
-  }
+		getMessages();
+	  }, [getMessages]);
 
-  // Save the message the user is typing in the input field.
-  handleContent(event) {
-    this.setState({
-      content: event.target.value,
-    });
-  }
 
-  //
-  handleName(event) {
-    this.setState({
-      name: event.target.value,
-    });
-  }
+  return (
+    <>
+      <h3>History</h3>
+    <div className={classes.root}>
+      <Paper  elevation={3} >
+ 	{chatMessages.map(key=>(
 
-  // When the user is posting a new message.
-  handleSubmit(event) {
-    console.log(event);
+                        <div   key={key.id}>
+		                                    <Typography variant="caption" className="name">
+                                        {key.user_id}
+                                        </Typography>
+                                      <Typography variant="body1" className="content">
+                                      {key.message}
+                                      </Typography>
+                                       
+                                 
+                        </div>
 
-    // Prevent the form to reload the current page.
-    event.preventDefault();
 
-    this.setState((state) => {
-      console.log(state);
-      console.log('this', this.socket);
-      // Send the new message to the server.
-      this.socket.emit('message', {
-        name: state.name,
-        content: state.content,
-      });
+	))}
+      </Paper>
+    </div>
+    </>
+  )
 
-      // Update the chat with the user's message and remove the current message.
-      return {
-        chat: [...state.chat, {
-          name: state.name,
-          content: state.content,
-        }],
-        content: '',
-      };
-    }, this.scrollToBottom);
-  }
 
-  // Always make sure the window is scrolled down to the last message.
-  scrollToBottom() {
-    const chat = document.getElementById('chat');
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <Paper id="chat" elevation={3}>
-          {this.state.chat.map((el, index) => {
-            return (
-              <div key={index}>
-                <Typography variant="caption" className="name">
-                  {el.name}
-                </Typography>
-                <Typography variant="body1" className="content">
-                  {el.content}
-                </Typography>
-              </div>
-            );
-          })}
-        </Paper>
-        <BottomBar
-          content={this.state.content}
-          handleContent={this.handleContent.bind(this)}
-          handleName={this.handleName.bind(this)}
-          handleSubmit={this.handleSubmit.bind(this)}
-          name={this.state.name}
-        />
-      </div>
-    );
-  }
-};
-
-export default FetchChats;
+}
