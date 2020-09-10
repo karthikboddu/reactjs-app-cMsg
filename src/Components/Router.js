@@ -1,23 +1,30 @@
-import React, { Component } from 'react';
-import { Route, Switch, Redirect } from "react-router-dom";
+import React from 'react';
+import { Route, Switch } from "react-router-dom";
 import { PrivateRoute } from "../helpers/PrivateRoute"
 import RegForm from './Regiser'
 import Homescreen from './home'
 import LoginTab from './LoginForm'
-import NavBar from './Headers'
+//import NavBar from './Headers'
 import Test from './Test'
 import ChatHome from '../Screens/ChatHome'
+import ChatUser from './Chat/ChatUser'
+import { SnackbarProvider } from 'notistack';
+
+//import history from '../helpers/history';
 const Router = () => {
 
     return (
+	
         <Switch>
-            <Route exact path="/" component={LoginTab} />
+            <Route exact path="/" component={Homescreen} />
             <Route path="/login" component={LoginTab}></Route>
             <Route path="/register" component={RegForm}></Route>
-	    <Route path="/test" component={Test}></Route>
- 		<Route path="/chats" component={ChatHome}></Route>
-            <PrivateRoute path="/home" component={Homescreen} />
-        </Switch>
+	        <Route path="/test" component={Test}></Route>
+ 		     <PrivateRoute path="/chats" component={ChatHome}/>
+             <PrivateRoute path="/chatuser" component={ChatUser}/>
+             <PrivateRoute path="/home" component={Homescreen} />
+            </Switch>
+
     )
 
 

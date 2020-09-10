@@ -24,14 +24,34 @@ export default (state, action) => {
     case 'SEND_MSG':
 	return{
 	  ...state,
-	  chatMessages:[action.payload,...state.chatMessages]
+	  chatMessages:[...state.chatMessages,action.payload]
 	}
     case 'GET_MSG':
-	return{
-	  ...state,
-	  loading: false,
-	  chatMessages: action.payload
-	}
+  	return{
+  	  ...state,
+  	  loading: false,
+  	  chatMessages: action.payload
+  	}
+
+    case 'SET_CHATUSER':
+        return{
+          ...state,
+          chatUser: action.payload
+        }
+
+    case 'GET_CHATUSER':
+          return{
+            ...state,
+            loading: false,
+            chatUser: action.payload
+          }
+    case 'GET_ALLCHATUSER':
+          return{
+            ...state,
+            loading: false,
+            allChatUsers: action.payload
+          }          
+        
     default:
       return state;
   }

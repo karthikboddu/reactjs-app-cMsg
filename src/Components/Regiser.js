@@ -1,25 +1,25 @@
 import React from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import { FormGroup } from '@material-ui/core';
+//import Snackbar from '@material-ui/core/Snackbar';
+//import { FormGroup } from '@material-ui/core';
 import { useForm, ErrorMessage } from 'react-hook-form';
-import Alert from '@material-ui/lab/Alert'
+//import Alert from '@material-ui/lab/Alert'
 import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
+// import FormHelperText from '@material-ui/core/FormHelperText';
+//import Input from '@material-ui/core/Input';
+//import InputLabel from '@material-ui/core/InputLabel';
+//import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+//import Container from '@material-ui/core/Container';
+//import Paper from '@material-ui/core/Paper';
+//import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { userRegister } from "../Services/services";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Fab from '@material-ui/core/Fab';
-import CheckIcon from '@material-ui/icons/Check';
-import SaveIcon from '@material-ui/icons/Save';
+//import Fab from '@material-ui/core/Fab';
+//import CheckIcon from '@material-ui/icons/Check';
+//import SaveIcon from '@material-ui/icons/Save';
 import clsx from 'clsx';
 import { green } from '@material-ui/core/colors';
 import { useHistory } from "react-router-dom";
@@ -78,13 +78,13 @@ export default function RegForm() {
     setState({ ...state, [event.target.id]: event.target.value })
   }
 
-  const handleSBClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
-    }
-    console.log("sb")
-    setState({ ...state, open: false })
-  }
+  // const handleSBClose = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return
+  //   }
+  //   console.log("sb")
+  //   setState({ ...state, open: false })
+  // }
 
   const handleAddUser = (data) => {
     const { firstName, lastName, email, password } = state
@@ -142,7 +142,7 @@ export default function RegForm() {
 
 
   return (
-    <Grid container container
+    <Grid container
       direction="column"
       justify="space-evenly"
       alignItems="center"  >

@@ -2,8 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import FolderIcon from '@material-ui/icons/Folder';
-import RestoreIcon from '@material-ui/icons/Restore';
+
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Grid from '@material-ui/core/Grid';
@@ -42,7 +41,7 @@ const handleLogoutRoute = () =>{
 };
 
 	return (
-<Grid  direction="row" justify="flex-end" alignItems="center" spacing={1}>
+<Grid container direction="row" justify="flex-end" alignItems="center" spacing={1}>
 <Grid item xs={12}  sm={3}>
     <BottomNavigation value={value} onChange={handleChangeNav} className={classes.root}>
 	{ authData ? null : (<BottomNavigationAction label="Login" value="login" icon={<AccountBoxOutlinedIcon />} onClick={handleRoute} />)
