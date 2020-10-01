@@ -13,7 +13,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import socketIOClient from 'socket.io-client';
 import { GlobalContext } from '../../Context/GlobalState';
-
+import { useSnackbar } from 'notistack';
 // import {
 //     useGetGlobalMessages,
 //     useSendGlobalMessage,
@@ -68,8 +68,11 @@ const ChatUser = props => {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [lastMessage, setLastMessage] = useState(null);
+    const { chatUser, getSelectedChatUser } = useContext(GlobalContext);
       const {sendMessages } = useContext(GlobalContext);
       const { chatMessages, getMessages } = useContext(GlobalContext);
+      const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
     // const getGlobalMessages = useGetGlobalMessages();
     // const sendGlobalMessage = useSendGlobalMessage();
     // const getConversationMessages = useGetConversationMessages();
@@ -78,17 +81,42 @@ const ChatUser = props => {
     let chatBottom = useRef(null);
     const classes = useStyles();
     const SOCKET_IO_URL = "http://localhost:4000";
-  console.log(props.location.state.users,"id")
+    console.log(chatUser,"id")
     useEffect(() => {
-        reloadMessages();
+        getLoggedInUser();
         scrollToBottom();
+        
+        getSelectedChatUser()
+        socketMessages();
+        reloadMessages();
     }, [lastMessage, props.scope, props.conversationId]);
+    
+    //console.log(currentChatUser,"currentChatUser")
+    // useEffect(() => {
+    //     const socket = socketIOClient(SOCKET_IO_URL,{transports: ['polling']});
+    //     //const listenTo =`newMessage${props.user}`;    
+    //     socket.on(props.user, data => setLastMessage(data));
+    // }, [])
 
-    useEffect(() => {
+
+
+    const socketMessages = () => {
+
+        console.log(chatUser,"props.user")
+         const parsedLoginUser = JSON.parse(loggedInUser);
         const socket = socketIOClient(SOCKET_IO_URL);
-        //const listenTo =`newMessage${props.user}`;    
-        socket.on(props.user, data => setLastMessage(data));
-    }, [])
+        const listenTo =`${chatUser.receiver_id}${parsedLoginUser.id}`;  
+        console.log(listenTo,"lis")
+        if (chatUser.receiver_id !== null ) {  
+        socket.on(listenTo, data =>{ setLastMessage(data);
+            console.log(data,"scocket")
+            enqueueSnackbar(`New Message ${data.data.author_username}`, {
+                    variant: 'info',
+                })
+           } );
+        }
+
+    }; 
 
     const reloadMessages = () => {
         // if (props.scope === 'Global Chat') {
@@ -96,8 +124,9 @@ const ChatUser = props => {
         //         setMessages(res);
         //     });
         // } else 
-        if (props.location.scope.name !== null ) {
-            getMessages(props.location.state.users);
+
+        if (chatUser.receiverUsers.username !== null ) {
+            getMessages(chatUser.receiver_id);
             setMessages(chatMessages.conversations)
             console.log(messages,"msg")
         } else {
@@ -135,16 +164,16 @@ const ChatUser = props => {
 
     return (
         <Grid  className={classes.root}>
-            <Grid item xs={8} className={classes.headerRow}>
+            <Grid item xs={12} className={classes.headerRow}>
                 <Paper className={classes.paper} square elevation={2}>
                     <Typography color="inherit" variant="h6">
-                        {props.location.scope.name}
+                        {chatUser.receiverUsers.username}
                     </Typography>
                 </Paper>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={12}>
                 <Grid container className={classes.messageContainer}>
-                    <Grid item xs={8} className={classes.messagesRow}>
+                    <Grid item xs={12} className={classes.messagesRow}>
                         {chatMessages && (
                             <List>
                                 {chatMessages.map(m => (
@@ -172,7 +201,7 @@ const ChatUser = props => {
                         )}
                         <div ref={chatBottom} />
                     </Grid>
-                    <Grid item xs={8} className={classes.inputRow}>
+                    <Grid item xs={12} className={classes.inputRow}>
                         <form onSubmit={handleSubmit} className={classes.form}>
                             <Grid
                                 container

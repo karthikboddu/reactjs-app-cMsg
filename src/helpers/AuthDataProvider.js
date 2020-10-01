@@ -14,38 +14,29 @@ const AuthDataProvider = props => {
    */
   useEffect(() => {
 
-		// getAuth().then(res=>{
-			
-		// 	if(res.data.user){
-		// 		setAuthData(true);
-		// 		console.log(res.data.user);
-		// 	}else{
-
-		// 	}
-		// })
-    const fetchData = async () => {
-      const result = await axios(
-        `${process.env.REACT_APP_API_URL}/api/user`,{
-    headers: { 'Authorization': 'Bearer' + getAuthToken() }
-    }
+      const fetchData = async () => {
+        const result = await axios(
+          `${process.env.REACT_APP_API_URL}/api/user`,{
+      headers: { 'Authorization': 'Bearer' + getAuthToken() }
+      }
       );
 
       if(result.data.user){
-        localStorage.setItem("uid",result.data.user.id)
+        localStorage.setItem("uid",JSON.stringify(result.data.user))
         setAuthData(true);
       }else{
-	setAuthData(false)
-	}
+	       setAuthData(false)
+	     }
       
     };
 
-fetchData();
+    fetchData();
     //const currentAuthData = authenticated;
     //if (currentAuthData) {
     //  setAuthData(currentAuthData);
    // }
   }, []);
-console.log(authData,"authData")
+  console.log(authData,"authData")
   const onLogout = newAuthData => setAuthData(newAuthData);
   const onLogoutClearSession = () =>{
 	authLogout();

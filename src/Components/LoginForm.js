@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
@@ -12,6 +12,7 @@ import { userLogin } from "../Services/services";
 import { useHistory } from "react-router-dom";
 import { setAuthToken } from "../Services/auth";
 import {useAuthDataContext} from "../helpers/AuthDataProvider"
+import { GlobalContext } from '../Context/GlobalState';
 // import { useCookies } from 'react-cookie'
 
 
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginTab() {
 
   const {onLogin } = useAuthDataContext();
+  const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
   //const [authenticated, usero] = useAuth(getAuthToken());
   //const { isAuthenticated, login } = useContext(AuthContext)
   const classes = useStyles();
@@ -59,6 +61,7 @@ export default function LoginTab() {
           setAuthToken(res.data);
           //login(data);
           onLogin(true)
+          getLoggedInUser()
           //localStorage.setItem('currentUser', res.data);	
           history.push("/home");
         } else {

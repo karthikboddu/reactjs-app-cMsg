@@ -15,6 +15,7 @@ import socketIOClient from 'socket.io-client';
 import { GlobalContext } from '../../Context/GlobalState';
 import Box from '@material-ui/core/Box';
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
 // import {
 //     useGetGlobalMessages,
 //     useSendGlobalMessage,
@@ -67,8 +68,12 @@ const ChatBox = props => {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [lastMessage, setLastMessage] = useState(null);
-      const {sendMessages } = useContext(GlobalContext);
-      const { chatMessages, getMessages } = useContext(GlobalContext);
+    const {sendMessages } = useContext(GlobalContext);
+    const { chatMessages, getMessages } = useContext(GlobalContext);
+    const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
+      const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+      const { allChatUsers, getAllChatUser } = useContext(GlobalContext);
+const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
     // const getGlobalMessages = useGetGlobalMessages();
     // const sendGlobalMessage = useSendGlobalMessage();
     // const getConversationMessages = useGetConversationMessages();
@@ -77,17 +82,45 @@ const ChatBox = props => {
     let chatBottom = useRef(null);
     const classes = useStyles();
     const SOCKET_IO_URL = "http://localhost:4000";
-  console.log(props.user,"id")
+    console.log(props.user,"id")
     useEffect(() => {
         reloadMessages();
         scrollToBottom();
+        //getLoggedInUser();
+        // socketMessages()
+        //getAllChatUser();
+        
+ 
     }, [lastMessage, props.scope, props.conversationId]);
 
     useEffect(() => {
+    console.log(allChatUsers,"allChatUsers")
+        if (allChatUsers) {  
+        allChatUsers.map((number) =>
+            socketMessages(number)
+        );   
+        }
+    }, [allChatUsers])
+
+
+    const socketMessages = (user) => {
+        const parsedLoginUser = JSON.parse(loggedInUser);
+        console.log(parsedLoginUser,"(*********");
+        // console.log(props.user,user.id,"props.user")
         const socket = socketIOClient(SOCKET_IO_URL);
-        //const listenTo =`newMessage${props.user}`;    
-        socket.on(props.user, data => setLastMessage(data));
-    }, [])
+        const listenTo =`${user.id}${parsedLoginUser.id}`;  
+        console.log(listenTo,"lis")
+        console.log(allChatUsers,"allchatuser")
+        if (props.user !== null ) {  
+        socket.on(listenTo, data =>{ setLastMessage(data);
+            console.log(data,"scocket")
+            enqueueSnackbar(`New Message ${data.data.author_username}`, {
+                    variant: 'info',
+                })
+           } );
+        }
+
+    };   
 
     const reloadMessages = () => {
         // if (props.scope === 'Global Chat') {
@@ -98,6 +131,7 @@ const ChatBox = props => {
         if (props.scope !== null ) {
             getMessages(props.user);
             setMessages(chatMessages.conversations)
+		
             console.log(messages,"msg")
         } else {
             setMessages([]);
@@ -115,6 +149,7 @@ const ChatBox = props => {
      useEffect(scrollToBottom, [messages]);
 
     const handleSubmit = e => {
+        const parsedLoginUser = JSON.parse(loggedInUser);
         e.preventDefault();
         if (props.scope === 'Global Chat') {
             // sendGlobalMessage(newMessage).then(() => {
@@ -123,16 +158,17 @@ const ChatBox = props => {
         } else {
                   const postData = {
 
-        //firstName: firstName,
-        //lastName: lastName,
-        channel_id:2,
-        receiver_id:props.user,
-        username: 'Test',
-        author_username: 'Test',
-        message: newMessage
-    }
-            sendMessages(postData)
-                setNewMessage('');
+                    //firstName: firstName,
+                    //lastName: lastName,
+                    channel_id:2,
+                    receiver_id:props.user,
+                    username:props.scope ,
+                    author_username: parsedLoginUser.username,
+                    message: newMessage
+                 }
+                    sendMessages(postData)
+			getRecentMessagesByUser();
+                        setNewMessage('');
         }
     };
 

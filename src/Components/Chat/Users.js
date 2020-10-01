@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext,useEffect } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -6,7 +6,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import socketIOClient from 'socket.io-client';
-
+import { GlobalContext } from '../../Context/GlobalState';
 import { getAllChatUsers } from '../../Services/Chats/ChatService';
 
 const useStyles = makeStyles(theme => ({
@@ -34,15 +34,16 @@ const Users = props => {
     const classes = useStyles();
     const [users, setUsers] = useState([]);
     const [newUser, setNewUser] = useState(null);
+     const { allChatUsers, getAllChatUser } = useContext(GlobalContext);
     //const getUsers = getAllChatUsers();
 
     useEffect(() => {
-	
+	   getAllChatUser()
        getAllChatUsers()
-      .then((res) => {
-	console.log(res.data,"users")
- 	setUsers(res.data.user)
-      })
+       .then((res) => {
+	console.log(res,"users")
+ 	  setUsers(res.data.user)
+       })
       .catch((err) => {
 
       });
@@ -51,7 +52,7 @@ const Users = props => {
     }, [newUser]);
 
     useEffect(() => {
-        const socket = socketIOClient("http://localhost:4000");
+        const socket =  socketIOClient("http://localhost:4000");
         socket.on('users', data => {
             setNewUser(data);
         });

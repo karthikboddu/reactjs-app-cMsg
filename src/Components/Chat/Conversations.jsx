@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState,useContext, useEffect } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -9,8 +9,11 @@ import Divider from '@material-ui/core/Divider';
 import { makeStyles } from '@material-ui/core/styles';
 import socketIOClient from 'socket.io-client';
 import { useHistory } from "react-router-dom";
-import { getRecentMessagesByUser } from '../../Services/Chats/ChatService';
+import { getRecentMessageByUser,setSeenCount } from '../../Services/Chats/ChatService';
 import  { Redirect } from 'react-router-dom'
+import {isMobile} from 'react-device-detect';
+import { GlobalContext } from '../../Context/GlobalState';
+import Badge from '@material-ui/core/Badge';
 const useStyles = makeStyles(theme => ({
     subheader: {
         display: 'flex',
@@ -34,36 +37,62 @@ const Conversations = props => {
     const [conversations, setConversations] = useState([]);
     const [newConversation, setNewConversation] = useState(null);
     let history = useHistory();
-
+    const {setSelectedChatUser } = useContext(GlobalContext);
+	const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
     // Returns the recipient name that does not
     // belong to the current user.
-    // const handleRecipient = recipients => {
-
-    //     for (let i = 0; i < recipients.length; i++) {
+    const handleRecipient = (firstname,lastname) => {
+        var fname = firstname.charAt(0);
+        var lname = lastname.charAt(0);
+        console.log(fname,lname,"ad")
+       return fname.lname
+        // for (let i = 0; i < recipients.length; i++) {
 		
-    //         if (
+        //     if (
 		
-    //             recipients.user_id !==
-    //             localStorage.getItem('uid')
-    //         ) {
-    //             return recipients;
-    //         }
-    //     }
+        //         recipients.user_id !==
+        //         localStorage.getItem('uid')
+        //     ) {
+        //         return recipients;
+        //     }
+        // }
        
-    // };
+    };
+    const handleButtonClick = c => {
+    console.log("rec")
 
+    setSeenCount(c.receiverUsers.id).then(res => getRecentMessagesByUser());
+    if(isMobile){
+            setSelectedChatUser(c);
+            history.push({
+                     pathname: '/chatuser',
+                    state: { users: c.receiverUsers.id },
+                    scope: { name: c.receiverUsers.username }
+            });
+    }
+    setSelectedChatUser(c)
+    }
     useEffect(() => {
-        getRecentMessagesByUser().then(res => setConversations(res.data.conversations));
+       //getRecentMessagesByUser();
+        getRecentMessagesByUser()
+
+        
     }, [newConversation]);
-
+ // getRecentMessagesByUser();
     useEffect(() => {
-        let socket = socketIOClient("http://localhost:4000");
-        socket.on('messages', data => setNewConversation(data));
+        setConversations(recentChatMessages)
+        // let socket = socketIOClient("http://localhost:4000");
+        // socket.on('messages', data => setNewConversation(data));
 
-        return () => {
-            socket.removeListener('messages');
-        };
+        // return () => {
+        //     socket.removeListener('messages');
+        // };
     }, []);
+
+const defaultProps = {
+  color: 'secondary',
+  
+};
 
     return (
         <List className={classes.list}>
@@ -85,20 +114,15 @@ const Conversations = props => {
             </ListItem>
             <Divider />
 
-            {conversations && (
+            {recentChatMessages && (
                 <React.Fragment>
-                    {conversations.map(c => (
+                    {recentChatMessages.map(c => (
                         <ListItem
                             className={classes.listItem}
                             key={c.receiverUsers.id}
                             button
                             onClick={() => {
-                                history.push({
-                                       pathname: '/chatuser',
-                                     
-                                       state: { users: c.receiverUsers.id },
-                                       scope: { name: c.receiverUsers.username }
-                                   });
+                                handleButtonClick(c);
                                 props.setUser(c.receiverUsers.id);
                                 props.setScope(
                                     c.receiverUsers.username
@@ -107,7 +131,7 @@ const Conversations = props => {
                         >
 
                             <ListItemAvatar>
-                                <Avatar>AD</Avatar>
+                                <Avatar>{c.receiverUsers.firstname}</Avatar>
                             </ListItemAvatar>                         
                             <ListItemText
                                 primary={c.receiverUsers.username}
@@ -117,6 +141,7 @@ const Conversations = props => {
                                     </React.Fragment>
                                 }
                             />
+		<Badge badgeContent={c.notseen} {...defaultProps} />
                         </ListItem>
                     ))}
                 </React.Fragment>

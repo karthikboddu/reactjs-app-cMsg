@@ -51,7 +51,23 @@ export default (state, action) => {
             loading: false,
             allChatUsers: action.payload
           }          
-        
+    case 'SET_LOGGEDUSER':
+          return{
+            ...state,
+            loggedInUser:[...state.loggedInUser,action.payload]
+          }
+    case 'GET_LOGGEDUSER':
+          return{
+            ...state,
+            loading: false,
+            loggedInUser: action.payload
+          }     
+    case 'GET_RECENTMSG':
+          return{
+            ...state,
+            loading: false,
+            recentChatMessages: action.payload
+          }                          
     default:
       return state;
   }

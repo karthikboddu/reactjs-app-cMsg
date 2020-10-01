@@ -43,8 +43,8 @@ export async function getChatMessagesByUser(id){
 
 
 }
-export async function getRecentMessagesByUser(){
-
+export async function getRecentMessageByUser(){
+    console.log("________________________________________")
 
     return await axios.get(`${process.env.REACT_APP_API_URL}/api/conversations/getRecentMessagesByUser`,{
         headers: { 'Authorization': 'Bearer' + getAuthToken() }
@@ -81,6 +81,12 @@ export async function getAllChatUsers(){
 
 
 
-
+export async function setSeenCount(id) {
+    
+    return await axios.get(`${process.env.REACT_APP_API_URL}/api/conversations/query/seen/`+id, {
+        headers: { 'Authorization': 'Bearer' + getAuthToken() }
+    }
+    )
+}
 
 

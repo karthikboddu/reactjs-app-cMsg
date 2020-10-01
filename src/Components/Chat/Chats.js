@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState,useContext,useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 // import List from '@material-ui/core/List';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
-
-
+import {isMobile} from 'react-device-detect';
 import Conversations from './Conversations';
 import Users from './Users';
 import ChatBox from './ChatBox';
+import ChatUser from './ChatUser';
+import socketIOClient from 'socket.io-client';
+import { GlobalContext } from '../../Context/GlobalState';
+import { useSnackbar } from 'notistack';
 const useStyles = makeStyles(theme => ({
     paper: {
         minHeight: 'calc(100vh - 64px)',
@@ -34,6 +36,18 @@ const useStyles = makeStyles(theme => ({
 
 const Chats = () => {
     const [scope, setScope] = useState('Global Chat');
+    const [newMessage, setNewMessage] = useState('');
+    const [messages, setMessages] = useState([]);
+    const [lastMessage, setLastMessage] = useState(null);
+const { chatMessages, getMessages } = useContext(GlobalContext);
+
+    const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
+    const { allChatUsers, getAllChatUser } = useContext(GlobalContext);
+    const { chatUser, getSelectedChatUser } = useContext(GlobalContext);
+    const {setSelectedChatUser } = useContext(GlobalContext);
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
+    const SOCKET_IO_URL = "http://localhost:4000";
     const [tab, setTab] = useState(0);
     const [user, setUser] = useState(null);
     const classes = useStyles();
@@ -41,6 +55,76 @@ const Chats = () => {
     const handleChange = (e, newVal) => {
         setTab(newVal);
     };
+        
+    useEffect(() => {
+        getLoggedInUser();
+        // socketMessages()
+
+        getAllChatUser()
+        getSelectedChatUser();
+       userjoined()
+    }, []);
+
+    useEffect(() => {
+
+    console.log(allChatUsers,"allChatUsers")
+        if (allChatUsers) {  
+        allChatUsers.map((number) =>
+            socketMessages(number)
+	       
+        );   
+        }
+    }, [allChatUsers])
+
+    const reloadRecentMessages = () => {
+
+            getRecentMessagesByUser();
+
+    };
+
+    const reloadMessages = (id) => {
+        // if (props.scope === 'Global Chat') {
+        //     getGlobalMessages().then(res => {
+        //         setMessages(res);
+        //     });
+        // } else 
+            getMessages(id);
+            //setMessages(chatMessages.conversations)
+            console.log(messages,"msg")
+    };
+
+
+    const userjoined = () =>{
+        console.log("userj")
+        let socket = socketIOClient("http://localhost:4000");
+        socket.on('user-joined', data =>             
+            enqueueSnackbar(`${data} loggedIn`, {
+                    variant: 'info',
+                }));
+
+    };
+        
+    const socketMessages = (user) => {
+
+        
+        const parsedLoginUser = JSON.parse(loggedInUser);
+        console.log(parsedLoginUser,"((((((((((((");
+        const socket = socketIOClient(SOCKET_IO_URL);
+        const listenTo =`${user.id}${parsedLoginUser.id}`;  
+        console.log(listenTo,"lis")
+        console.log(allChatUsers,"allchatuser")
+        if (user !== null ) {  
+        socket.on(listenTo, data =>{ 
+            console.log(data,"scocket")
+            reloadMessages(user.id)
+             reloadRecentMessages()
+            enqueueSnackbar(`New Message ${data.data.author_username}`, {
+                    variant: 'info',
+                })
+           } );
+        }
+
+    };  
 
     return (
         <React.Fragment>
@@ -61,7 +145,8 @@ const Chats = () => {
                             </Tabs>
                         </Paper>
                         {tab === 0 && (
-                            <Conversations
+                            <Conversations 
+                                onClick={e => setSelectedChatUser.chatUser(setUser)}
                                 setUser={setUser}
                                 setScope={setScope}
                             />
@@ -72,7 +157,10 @@ const Chats = () => {
                     </Paper>
                 </Grid>
                 <Grid item md={8}>
-                    <ChatBox scope={scope} user={user} />
+
+                        {!isMobile && (
+                        <ChatBox scope={scope} user={user} />
+                        )}
                 </Grid> 
             </Grid>
         </React.Fragment>
