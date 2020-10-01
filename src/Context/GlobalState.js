@@ -3,12 +3,14 @@ import AppReducer from './AppReducer';
 import {addItems,getItems} from '../Services/services';
 import * as _ from "lodash";
 import { useSnackbar } from 'notistack';
-import {addChats,getAllChatUsers,getChatMessagesByUser} from '../Services/Chats/ChatService';
+import {addChats,getAllChatUsers,getChatMessagesByUser,getRecentMessageByUser} from '../Services/Chats/ChatService';
 // Initial state
 const intialState = {
   products: [],
   chatMessages: [],
+  recentChatMessages:[],
   chatUser:'',
+  loggedInUser:'',
   allChatUsers:[],
   error: null,
   loading: true
@@ -143,7 +145,7 @@ export const GlobalProvider = ({children}) =>{
 
 
     try {
-      const data = localStorage.getItem("chatUser");
+      const data = state.chatUser
 
        console.log(data,"data");
       dispatch({
@@ -181,11 +183,73 @@ export const GlobalProvider = ({children}) =>{
     }
   }
 
+  async function setLoggedInUser(data){
+        try {
+      dispatch({
+        type: 'SET_LOGGEDUSER',
+        payload: data
+      });
+    } catch (err) {
+      enqueueSnackbar('Could not load setLoggedInUser', {
+                    variant: 'error',
+                })
+      dispatch({
+        type: 'MSG_ERROR',
+        payload: err
+      });
+    }
+  }
+
+  async function getLoggedInUser(){
+
+    try {
+      const data = localStorage.getItem("uid");
+      //localStorage.remoteItem('uid')
+      dispatch({
+        type: 'GET_LOGGEDUSER',
+        payload: data
+      });
+    } catch (err) {
+      enqueueSnackbar('Could not load getLoggedInUser', {
+                    variant: 'error',
+                })
+      dispatch({
+        type: 'MSG_ERROR',
+        payload: err
+      });
+    }
+  }
+
+    async function getRecentMessagesByUser(){
+
+    try {
+      const res = await getRecentMessageByUser();
+
+      console.log(res,"%%%%%%%")
+      //localStorage.remoteItem('uid')
+      dispatch({
+        type: 'GET_RECENTMSG',
+        payload: res.data.conversations
+      });
+    } catch (err) {
+      enqueueSnackbar('Could not load getRecentMessagesByUser', {
+                    variant: 'error',
+                })
+      dispatch({
+        type: 'MSG_ERROR',
+        payload: err
+      });
+    }
+  }
+
+
 
   return (<GlobalContext.Provider value={{
     products: state.products,
     chatMessages: state.chatMessages,
+    recentChatMessages: state.recentChatMessages,
     chatUser:state.chatUser,
+    loggedInUser:state.loggedInUser,
     allChatUsers:state.allChatUsers,
     error: state.error,
     loading: state.loading,
@@ -195,7 +259,10 @@ export const GlobalProvider = ({children}) =>{
     getMessages,
     getSelectedChatUser,
     setSelectedChatUser,
-    getAllChatUser
+    getAllChatUser,
+    setLoggedInUser,
+    getLoggedInUser,
+    getRecentMessagesByUser
   }}>
     {children}
   </GlobalContext.Provider>);
