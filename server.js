@@ -7,4 +7,4 @@ const port = process.env.PORT || 3001;app.use(express.static(publicPath));app.ge
    res.sendFile(path.join(publicPath, 'index.html'));
 });app.listen(port, () => {
    console.log('Server is up!');
-});
+}); 
