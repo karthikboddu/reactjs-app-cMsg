@@ -14,15 +14,33 @@ import { setAuthToken } from "../Services/auth";
 import {useAuthDataContext} from "../helpers/AuthDataProvider"
 import { GlobalContext } from '../Context/GlobalState';
 // import { useCookies } from 'react-cookie'
-
-
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Avatar from '@material-ui/core/Avatar';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
 const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: '10px'
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
-  margin: {
-    margin: theme.spacing(0),
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
   },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+
 }));
 
 
@@ -88,14 +106,18 @@ export default function LoginTab() {
   return (
 
 
-    <Grid container className={classes.root} direction="column"
-      justify="space-evenly"
-      alignItems="center">
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
      
-      <form noValidate autoComplete="off">
-        <Grid container spacing={3}>
-          <Grid item sm={12}>
-            <FormControl>
+      <form noValidate noValidate>
+
               <TextField id="outlined-Username" name="email"
                 label="Email"
                 type="email"
@@ -109,17 +131,15 @@ export default function LoginTab() {
                   })
                 }
                 fullWidth
+                margin="normal"
                 error={errors.email ? true : false}
                 variant="outlined" />
-            </FormControl>
+
             <ErrorMessage errors={errors} name="email" >
               {({ message }) => <p>{message}</p>}
             </ErrorMessage>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item sm={12}>
-            <FormControl>
+
+
               <TextField id="outlined-password"
                 variant="outlined"
                 name="password"
@@ -130,15 +150,13 @@ export default function LoginTab() {
                   })
                 }
                 type="password"
+                margin="normal"
                 error={errors.password ? true : false}
                 fullWidth />
-            </FormControl>
             <ErrorMessage errors={errors} name="password" >
               {({ message }) => <p>{message}</p>}
             </ErrorMessage>
-          </Grid>
-
-        </Grid>
+ 
 
         {/* <div className={classes.margin}>
           <Grid container spacing={1} alignItems="flex-end">
@@ -151,7 +169,7 @@ export default function LoginTab() {
           </Grid>
         </div> */}
 
-        <Grid container spacing={1}>
+   {/*      <Grid container spacing={1}>
           <Grid item sm={12}>
             <Button variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>
               Login
@@ -164,17 +182,44 @@ export default function LoginTab() {
           <Grid item sm={12}>
             <div>{state.message}</div>
           </Grid>
-        </Grid>
-      </form>
-      <Grid container spacing={1}>
+        </Grid>*/}  
+      
+  {/*   <Grid container spacing={1}>
           <Grid item sm={12}>
             <Button variant="contained" color="primary" onClick={handleSubmit(handleRegister)}>
               Register
             </Button>
           </Grid>
-        </Grid>
-    </Grid>
-
+        </Grid>*/}  
+           <FormControlLabel
+            control={<Checkbox value="remember" color="primary" />}
+            label="Remember me"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handleSubmit(onSubmit)}
+          >
+            Sign In
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="/register" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
+          </form>
+    </div>
+  </Container>
   );
 }
 

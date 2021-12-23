@@ -7,6 +7,7 @@ import LoginTab from './LoginForm'
 //import NavBar from './Headers'
 import Test from './Test'
 import ChatHome from '../Screens/ChatHome'
+import ExpenseScreen from '../Screens/ExpenseScreen'
 import ChatUser from './Chat/ChatUser'
 import { SnackbarProvider } from 'notistack';
 
@@ -23,6 +24,8 @@ const Router = () => {
  		     <PrivateRoute path="/chats" component={ChatHome}/>
              <PrivateRoute path="/chatuser" component={ChatUser}/>
              <PrivateRoute path="/home" component={Homescreen} />
+             <PrivateRoute path="/product" component={ExpenseScreen} />
+             <PrivateRoute path="/expenses" component={ExpenseScreen} /> 
             </Switch>
 
     )

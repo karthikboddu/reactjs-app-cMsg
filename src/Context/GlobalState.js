@@ -4,6 +4,7 @@ import {addItems,getItems} from '../Services/services';
 import * as _ from "lodash";
 import { useSnackbar } from 'notistack';
 import {addChats,getAllChatUsers,getChatMessagesByUser,getRecentMessageByUser} from '../Services/Chats/ChatService';
+import {addTransactionsSerice,getExpensesListByUser} from  '../Services/Expenses/ExpenseService';
 // Initial state
 const intialState = {
   products: [],
@@ -12,6 +13,7 @@ const intialState = {
   chatUser:'',
   loggedInUser:'',
   allChatUsers:[],
+  allTransactionsList:[],
   error: null,
   loading: true
 }
@@ -42,15 +44,17 @@ export const GlobalProvider = ({children}) =>{
     }
   }
 
-    async function addProducts(products) {
+    async function addProducts(products,save) {
 
 
     try {
-      const res = await addItems(products);
+      if(save=="Y"){
+        const res = await addItems(products);
+      }
 
       dispatch({
         type: 'ADD_PRODUCTS',
-        payload: res.data.product
+        payload: products
       });
     } catch (err) {
       dispatch({
@@ -124,7 +128,7 @@ export const GlobalProvider = ({children}) =>{
 
 
     try {
-      localStorage.setItem("chatUser",data);
+      localStorage.setItem("chatUser",JSON.stringify(data));
       dispatch({
         type: 'SET_CHATUSER',
         payload: data
@@ -145,9 +149,8 @@ export const GlobalProvider = ({children}) =>{
 
 
     try {
-      const data = state.chatUser
+      const data = localStorage.getItem("chatUser");
 
-       console.log(data,"data");
       dispatch({
         type: 'GET_CHATUSER',
         payload: data
@@ -242,7 +245,40 @@ export const GlobalProvider = ({children}) =>{
     }
   }
 
+  async function addTransactionsTo(items) {
 
+
+    try {
+
+        const res = await addTransactionsSerice(items);
+
+        dispatch({
+          type: 'ADD_TRANSACTIONS',
+          payload: res.data
+        });
+    } catch (err) {
+      dispatch({
+        type: 'TRANSACTIONS_ERROR',
+        payload: err
+      });
+    }
+  }
+
+  async function getTransactions() {
+    try {
+      const res = await getExpensesListByUser();
+
+      dispatch({
+        type: 'GET_TRANSACTIONS',
+        payload: res.data.expensesuserList
+      });
+    } catch (err) {
+      dispatch({
+        type: 'TRANSACTIONS_ERROR',
+        payload: err
+      });
+    }
+  }
 
   return (<GlobalContext.Provider value={{
     products: state.products,
@@ -262,7 +298,10 @@ export const GlobalProvider = ({children}) =>{
     getAllChatUser,
     setLoggedInUser,
     getLoggedInUser,
-    getRecentMessagesByUser
+    getRecentMessagesByUser,
+    getTransactions,
+    addTransactionsTo,
+    allTransactionsList: state.allTransactionsList
   }}>
     {children}
   </GlobalContext.Provider>);

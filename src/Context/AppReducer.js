@@ -67,7 +67,19 @@ export default (state, action) => {
             ...state,
             loading: false,
             recentChatMessages: action.payload
-          }                          
+          } 
+    case 'ADD_TRANSACTIONS':
+debugger
+      return {
+        ...state,
+        allTransactionsList: [...state.allTransactionsList, action.payload]
+      }      
+    case 'GET_TRANSACTIONS':
+      return {
+        ...state,
+        loading: false,
+        allTransactionsList: action.payload
+      }                           
     default:
       return state;
   }

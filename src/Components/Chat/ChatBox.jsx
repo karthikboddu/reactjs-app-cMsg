@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/Send';
+import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -16,6 +17,10 @@ import { GlobalContext } from '../../Context/GlobalState';
 import Box from '@material-ui/core/Box';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
+import { Input } from 'react-chat-elements'
+import Button from '@material-ui/core/Button';
+import { MessageList,MessageBox,SideBar } from 'react-chat-elements'
+
 // import {
 //     useGetGlobalMessages,
 //     useSendGlobalMessage,
@@ -160,7 +165,6 @@ const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
 
                     //firstName: firstName,
                     //lastName: lastName,
-                    channel_id:2,
                     receiver_id:props.user,
                     username:props.scope ,
                     author_username: parsedLoginUser.username,
@@ -171,6 +175,11 @@ const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
                         setNewMessage('');
         }
     };
+    var tempMessages = [];
+   // const getMessages = () => {
+
+
+  //  }    
 
     return (
         <Grid container className={classes.root}>
@@ -188,34 +197,24 @@ const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
                             <List>
                                 {chatMessages.map(m => (
                                      //const friendlyTimestamp = moment(m.created_at).format('LLLL');
-                                    <ListItem
-                                        key={m.id}
-                                        className={classes.listItem}
-                                        alignItems="flex-start"
-                                    >
-                                        <ListItemAvatar
-                                            className={classes.avatar}
-                                        >
-                                            <Avatar>H</Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={
-                                                <React.Fragment>
-                                                    {m.fromUsers.username}
-                                                </React.Fragment>          
-                                            }
-                                            secondary={
-                                                <React.Fragment>
-                                                    {m.message}
-                                                </React.Fragment>
-                                            }
-                                        />                                
-                                        <ListItemText
-                                            secondary={handleDate(m.created_at)}
-                                        />                                
+                            <MessageList
+                                    className='message-list'
+                                    lockable={true}
+                                    toBottomHeight={'100%'}
+                                    dataSource={[
+                                        {
+                                            avatar: 'https://facebook.github.io/react/img/logo.svg',
+                                            position: (props.user === m.receiver_id) ? 'right' : 'left',
+                                            type: 'text',
+                                            text: m.message,
+					    title: m.fromUsers.username,
+                                            date: new Date(),
+                                        },
 
-                                    </ListItem>
-                                ))}
+                                    ]} />
+                            ))}
+
+
                             </List>
                         )}
                         <div ref={chatBottom} />
@@ -227,7 +226,7 @@ const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
                                 className={classes.newMessageRow}
                                 alignItems="flex-end"
                             >
-                                <Grid item xs={11}>
+                                <Grid item xs={10}>
                                     <TextField
                                         id="message"
                                         label="Message"
@@ -239,10 +238,15 @@ const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
                                             setNewMessage(e.target.value)
                                         }
                                     />
-                                </Grid>
+                                </Grid>	
                                 <Grid item xs={1}>
                                     <IconButton type="submit">
                                         <SendIcon />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item xs={1}>
+                                    <IconButton >
+                                       <CloudUploadOutlinedIcon/>
                                     </IconButton>
                                 </Grid>
                             </Grid>

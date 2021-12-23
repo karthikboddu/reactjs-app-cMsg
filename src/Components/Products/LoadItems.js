@@ -1,7 +1,7 @@
 import React, { useState, useEffect ,useContext} from 'react';
-import { getItems} from "../Services/services";
+import { getItems} from "../../Services/services";
 import {ViewItems} from './ViewItems';
-import { GlobalContext } from '../Context/GlobalState';
+import { GlobalContext } from '../../Context/GlobalState';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -39,19 +39,12 @@ console.log("view")
 
   return (
     <>
-      <h3>History</h3>
+    <h3>History</h3>
     <div className={classes.root}>
-      <Grid container  direction="row"
-  justify="center"
-  alignItems="center" spacing={3}>
+      <Grid container  direction="row" justify="center" alignItems="center" spacing={3}>
         {products.map(products => (
-
-<ViewItems key={products.id} products={products} />
-
-
-
-))}
-
+          <ViewItems key={products.id} products={products} />
+        ))}
       </Grid>
     </div>
     </>

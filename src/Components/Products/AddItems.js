@@ -13,14 +13,14 @@ import Paper from '@material-ui/core/Paper';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { useForm, ErrorMessage } from "react-hook-form";
-import { userLogin,addItems } from "../Services/services";
+import { userLogin,addItems } from "../../Services/services";
 import { useHistory } from "react-router-dom";
-import { setAuthToken } from "../Services/auth";
-import {getAuthToken,isLogin,useAuth}  from "../Services/auth";
 
-import {useAuthDataContext} from "../helpers/AuthDataProvider"
-import { AuthContext } from '../Services/Authenticate'
-import { GlobalContext } from '../Context/GlobalState';
+import {getAuthToken,isLogin,useAuth,setAuthToken}  from "../../Services/auth";
+
+import {useAuthDataContext} from "../../helpers/AuthDataProvider"
+import { AuthContext } from '../../Services/Authenticate'
+import { GlobalContext } from '../../Context/GlobalState';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
+  p: {
+        color: theme.palette.primary.red,
+    }
 }));
 
 export default function AddItems() {
@@ -98,7 +101,7 @@ history.push("/register");
           <Grid item sm={12}>
             <FormControl>
               <TextField id="outlined-name" name="name"
-                label="Name"
+                label="Enter Name"
                 type="name"
                 inputRef={
                   register({
@@ -106,12 +109,13 @@ history.push("/register");
                   })
                 }
                 fullWidth
+                helperText={errors.name ? "Name Required" : ''}
                 error={errors.name ? true : false}
                 variant="outlined" />
             </FormControl>
-            <ErrorMessage errors={errors} name="name" >
+      {/*      <ErrorMessage className={classes.subheaderText} errors={errors} name="name" as="p">
               {({ message }) => <p>{message}</p>}
-            </ErrorMessage>
+            </ErrorMessage> */}  
           </Grid>
         </Grid>
         <Grid container spacing={3}>
@@ -120,19 +124,20 @@ history.push("/register");
               <TextField id="outlined-price"
                 variant="outlined"
                 name="price"
-                label="price"
+                label="Enter price"
                 inputRef={
                   register({
                     required: 'Price Required',
                   })
                 }
                 type="Price"
+                helperText={errors.name ? "Price Required" : ''}
                 error={errors.price ? true : false}
                 fullWidth />
             </FormControl>
-            <ErrorMessage errors={errors} name="price" >
+         {/*   <ErrorMessage errors={errors} name="price" >
               {({ message }) => <p>{message}</p>}
-            </ErrorMessage>
+            </ErrorMessage>  */}  
           </Grid>
 
         </Grid>
@@ -144,19 +149,20 @@ history.push("/register");
               <TextField id="outlined-quantity"
                 variant="outlined"
                 name="quantity"
-                label="quantity"
+                label="Enter quantity"
                 inputRef={
                   register({
                     required: 'quantity Required',
                   })
                 }
                 type="Price"
+                helperText={errors.name ? "Quantity Required" : ''}
                 error={errors.quantity ? true : false}
                 fullWidth />
             </FormControl>
-            <ErrorMessage errors={errors} name="quantity" >
+          {/*  <ErrorMessage errors={errors} name="quantity" >
               {({ message }) => <p>{message}</p>}
-            </ErrorMessage>
+            </ErrorMessage>  */}  
           </Grid>
 
         </Grid>

@@ -81,7 +81,7 @@ const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
     let chatBottom = useRef(null);
     const classes = useStyles();
     const SOCKET_IO_URL = "http://localhost:4000";
-    console.log(chatUser,"id")
+    console.log(props.location,"props")
     useEffect(() => {
         getLoggedInUser();
         scrollToBottom();
@@ -103,7 +103,7 @@ const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
     const socketMessages = () => {
 
         console.log(chatUser,"props.user")
-         const parsedLoginUser = JSON.parse(loggedInUser);
+         const parsedLoginUser = JSON.parse(localStorage.getItem('uid'));
         const socket = socketIOClient(SOCKET_IO_URL);
         const listenTo =`${chatUser.receiver_id}${parsedLoginUser.id}`;  
         console.log(listenTo,"lis")
@@ -125,8 +125,8 @@ const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
         //     });
         // } else 
 
-        if (chatUser.receiverUsers.username !== null ) {
-            getMessages(chatUser.receiver_id);
+        if (props.location.state.users !== null ) {
+            getMessages(props.location.state.users);
             setMessages(chatMessages.conversations)
             console.log(messages,"msg")
         } else {
@@ -167,7 +167,7 @@ const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
             <Grid item xs={12} className={classes.headerRow}>
                 <Paper className={classes.paper} square elevation={2}>
                     <Typography color="inherit" variant="h6">
-                        {chatUser.receiverUsers.username}
+                        Test
                     </Typography>
                 </Paper>
             </Grid>

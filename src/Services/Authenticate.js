@@ -3,13 +3,14 @@ import PropTypes from 'prop-types'
 import {  authLogout } from './auth'
 import {getAuth}  from "./auth";
 import { userLogin,userRegister } from "./services";
+import { useSnackbar } from 'notistack';
 export const AuthContext = React.createContext({})
 
 export default function Auth({ children }) {
 
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     //const [isLoading, setIsLoading] = useState(true)
-
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     useEffect(() => {
         checkAuth()
         console.log(checkAuth())

@@ -62,10 +62,10 @@ const Conversations = props => {
     console.log("rec")
 
     setSeenCount(c.receiverUsers.id).then(res => getRecentMessagesByUser());
-    if(isMobile){
+    if(!isMobile){
             setSelectedChatUser(c);
             history.push({
-                     pathname: '/chatuser',
+                     pathname: `/chatuser/${c.receiverUsers.id}`,
                     state: { users: c.receiverUsers.id },
                     scope: { name: c.receiverUsers.username }
             });

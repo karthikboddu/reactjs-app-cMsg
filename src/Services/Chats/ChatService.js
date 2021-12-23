@@ -44,7 +44,6 @@ export async function getChatMessagesByUser(id){
 
 }
 export async function getRecentMessageByUser(){
-    console.log("________________________________________")
 
     return await axios.get(`${process.env.REACT_APP_API_URL}/api/conversations/getRecentMessagesByUser`,{
         headers: { 'Authorization': 'Bearer' + getAuthToken() }

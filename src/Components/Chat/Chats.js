@@ -13,6 +13,12 @@ import ChatUser from './ChatUser';
 import socketIOClient from 'socket.io-client';
 import { GlobalContext } from '../../Context/GlobalState';
 import { useSnackbar } from 'notistack';
+import { ChatItem } from 'react-chat-elements'
+import 'react-chat-elements/dist/main.css';
+import { MessageBox,ChatList } from 'react-chat-elements'
+import Box from '@material-ui/core/Box';
+
+
 const useStyles = makeStyles(theme => ({
     paper: {
         minHeight: 'calc(100vh - 64px)',
@@ -39,7 +45,7 @@ const Chats = () => {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [lastMessage, setLastMessage] = useState(null);
-const { chatMessages, getMessages } = useContext(GlobalContext);
+    const { chatMessages, getMessages } = useContext(GlobalContext);
 
     const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
     const { allChatUsers, getAllChatUser } = useContext(GlobalContext);
@@ -130,7 +136,7 @@ const { chatMessages, getMessages } = useContext(GlobalContext);
         <React.Fragment>
             
             <Grid container>
-                <Grid item md={4} className={classes.sidebar}>
+                <Grid item xs={12} sm={12} md={4} className={classes.sidebar}>
                     <Paper className={classes.paper} square elevation={5}>
                         <Paper square>
                             <Tabs
@@ -156,12 +162,16 @@ const { chatMessages, getMessages } = useContext(GlobalContext);
                         )}
                     </Paper>
                 </Grid>
-                <Grid item md={8}>
-
+                
+                <Grid item  md={8} >
+                       
                         {!isMobile && (
                         <ChatBox scope={scope} user={user} />
                         )}
+                     
                 </Grid> 
+
+
             </Grid>
         </React.Fragment>
     );
