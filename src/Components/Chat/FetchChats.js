@@ -47,7 +47,7 @@ const { chatMessages, getMessages } = useContext(GlobalContext);
 //const { receiver_id, setReceiver_id } = useState('1');
 console.log("view")
 	useEffect(() => { 
-    const socket = io('http://localhost:4000');
+    const socket = io('https://nodejs-authtest.herokuapp.com');
 
     socket.on('laravel_database_N:App\\Events\\MessageSent', (msg) => {
 console.log("msg",msg)

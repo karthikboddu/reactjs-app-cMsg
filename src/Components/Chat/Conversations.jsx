@@ -81,7 +81,7 @@ const Conversations = props => {
  // getRecentMessagesByUser();
     useEffect(() => {
         setConversations(recentChatMessages)
-        // let socket = socketIOClient("http://localhost:4000");
+        // let socket = socketIOClient("https://nodejs-authtest.herokuapp.com");
         // socket.on('messages', data => setNewConversation(data));
 
         // return () => {

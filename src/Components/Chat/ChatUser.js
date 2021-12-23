@@ -80,7 +80,7 @@ const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
 
     let chatBottom = useRef(null);
     const classes = useStyles();
-    const SOCKET_IO_URL = "http://localhost:4000";
+    const SOCKET_IO_URL = "https://nodejs-authtest.herokuapp.com";
     console.log(props.location,"props")
     useEffect(() => {
         getLoggedInUser();

@@ -52,7 +52,7 @@ const Users = props => {
     }, [newUser]);
 
     useEffect(() => {
-        const socket =  socketIOClient("http://localhost:4000");
+        const socket =  socketIOClient("https://nodejs-authtest.herokuapp.com");
         socket.on('users', data => {
             setNewUser(data);
         });

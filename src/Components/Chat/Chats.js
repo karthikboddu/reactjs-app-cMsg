@@ -53,7 +53,7 @@ const Chats = () => {
     const {setSelectedChatUser } = useContext(GlobalContext);
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
-    const SOCKET_IO_URL = "http://localhost:4000";
+    const SOCKET_IO_URL = "https://nodejs-authtest.herokuapp.com";
     const [tab, setTab] = useState(0);
     const [user, setUser] = useState(null);
     const classes = useStyles();
@@ -102,7 +102,7 @@ const Chats = () => {
 
     const userjoined = () =>{
         console.log("userj")
-        let socket = socketIOClient("http://localhost:4000");
+        let socket = socketIOClient("https://nodejs-authtest.herokuapp.com");
         socket.on('user-joined', data =>             
             enqueueSnackbar(`${data} loggedIn`, {
                     variant: 'info',

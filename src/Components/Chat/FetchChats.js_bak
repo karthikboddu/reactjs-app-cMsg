@@ -20,7 +20,7 @@ class FetchChats extends React.Component {
   }
 
   componentDidMount() {
-    this.socket = io('http://localhost:4000');
+    this.socket = io('https://nodejs-authtest.herokuapp.com');
 
     // Load the last 10 messages in the window.
     this.socket.on('init', (msg) => {

@@ -86,7 +86,7 @@ const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
 
     let chatBottom = useRef(null);
     const classes = useStyles();
-    const SOCKET_IO_URL = "http://localhost:4000";
+    const SOCKET_IO_URL = "https://nodejs-authtest.herokuapp.com";
     console.log(props.user,"id")
     useEffect(() => {
         reloadMessages();
