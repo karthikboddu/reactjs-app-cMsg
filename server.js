@@ -12,7 +12,16 @@ var server = http.Server();
 var Redis = require('ioredis');
 // A redis client
 var redis = new Redis();
-var io = socketIO(server);
+const io = socketIO(server,{
+   origins:["*"],
+   path: '/',
+   serveClient: false,
+   // below are engine.IO options
+   pingInterval: 20000,
+   pingTimeout: 5000,
+   cookie: false
+})
+io.set('transports', [ 'websocket' ]);
 
 // Store people in chatroom
 var chatters = [];
