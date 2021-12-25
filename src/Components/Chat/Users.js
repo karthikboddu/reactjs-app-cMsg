@@ -35,6 +35,7 @@ const Users = props => {
     const [users, setUsers] = useState([]);
     const [newUser, setNewUser] = useState(null);
      const { allChatUsers, getAllChatUser } = useContext(GlobalContext);
+     const REACT_APP_SOCKET_IO_URL = process.env.REACT_APP_SOCKET_IO_URL;
     //const getUsers = getAllChatUsers();
 
     useEffect(() => {
@@ -52,7 +53,7 @@ const Users = props => {
     }, [newUser]);
 
     useEffect(() => {
-        const socket =  socketIOClient("https://nodejs-authtest.herokuapp.com");
+        const socket =  socketIOClient(REACT_APP_SOCKET_IO_URL);
         socket.on('users', data => {
             setNewUser(data);
         });

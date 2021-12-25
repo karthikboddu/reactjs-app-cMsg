@@ -86,7 +86,7 @@ const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
 
     let chatBottom = useRef(null);
     const classes = useStyles();
-    const SOCKET_IO_URL = "https://nodejs-authtest.herokuapp.com";
+    const REACT_APP_SOCKET_IO_URL = process.env.REACT_APP_SOCKET_IO_URL;
     console.log(props.user,"id")
     useEffect(() => {
         reloadMessages();
@@ -112,7 +112,7 @@ const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
         const parsedLoginUser = JSON.parse(loggedInUser);
         console.log(parsedLoginUser,"(*********");
         // console.log(props.user,user.id,"props.user")
-        const socket = socketIOClient(SOCKET_IO_URL);
+        const socket = socketIOClient(REACT_APP_SOCKET_IO_URL);
         const listenTo =`${user.id}${parsedLoginUser.id}`;  
         console.log(listenTo,"lis")
         console.log(allChatUsers,"allchatuser")

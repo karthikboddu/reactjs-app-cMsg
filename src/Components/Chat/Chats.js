@@ -53,7 +53,8 @@ const Chats = () => {
     const {setSelectedChatUser } = useContext(GlobalContext);
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const {recentChatMessages,getRecentMessagesByUser } = useContext(GlobalContext);
-    const SOCKET_IO_URL = "https://nodejs-authtest.herokuapp.com";
+    const REACT_APP_SOCKET_IO_URL = process.env.REACT_APP_SOCKET_IO_URL;
+    console.log("socket1",process.env.REACT_APP_SOCKET_IO_URL)
     const [tab, setTab] = useState(0);
     const [user, setUser] = useState(null);
     const classes = useStyles();
@@ -102,7 +103,7 @@ const Chats = () => {
 
     const userjoined = () =>{
         console.log("userj")
-        let socket = socketIOClient("https://nodejs-authtest.herokuapp.com");
+        let socket = socketIOClient(REACT_APP_SOCKET_IO_URL);
         socket.on('user-joined', data =>             
             enqueueSnackbar(`${data} loggedIn`, {
                     variant: 'info',
@@ -115,7 +116,7 @@ const Chats = () => {
         
         const parsedLoginUser = JSON.parse(loggedInUser);
         console.log(parsedLoginUser,"((((((((((((");
-        const socket = socketIOClient(SOCKET_IO_URL);
+        const socket = socketIOClient(REACT_APP_SOCKET_IO_URL,{transports: ['websocket']});
         const listenTo =`${user.id}${parsedLoginUser.id}`;  
         console.log(listenTo,"lis")
         console.log(allChatUsers,"allchatuser")

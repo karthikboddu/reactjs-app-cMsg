@@ -62,7 +62,7 @@ const Conversations = props => {
     console.log("rec")
 
     setSeenCount(c.receiverUsers.id).then(res => getRecentMessagesByUser());
-    if(!isMobile){
+    if(isMobile){
             setSelectedChatUser(c);
             history.push({
                      pathname: `/chatuser/${c.receiverUsers.id}`,
@@ -81,7 +81,7 @@ const Conversations = props => {
  // getRecentMessagesByUser();
     useEffect(() => {
         setConversations(recentChatMessages)
-        // let socket = socketIOClient("https://nodejs-authtest.herokuapp.com");
+        // let socket = socketIOClient("http://localhost:8000");
         // socket.on('messages', data => setNewConversation(data));
 
         // return () => {

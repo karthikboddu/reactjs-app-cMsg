@@ -80,7 +80,7 @@ const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
 
     let chatBottom = useRef(null);
     const classes = useStyles();
-    const SOCKET_IO_URL = "https://nodejs-authtest.herokuapp.com";
+    const REACT_APP_SOCKET_IO_URL = process.env.REACT_APP_SOCKET_IO_URL;
     console.log(props.location,"props")
     useEffect(() => {
         getLoggedInUser();
@@ -93,7 +93,7 @@ const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
     
     //console.log(currentChatUser,"currentChatUser")
     // useEffect(() => {
-    //     const socket = socketIOClient(SOCKET_IO_URL,{transports: ['polling']});
+    //     const socket = socketIOClient(REACT_APP_SOCKET_IO_URL,{transports: ['polling']});
     //     //const listenTo =`newMessage${props.user}`;    
     //     socket.on(props.user, data => setLastMessage(data));
     // }, [])
@@ -104,7 +104,7 @@ const {loggedInUser,getLoggedInUser } = useContext(GlobalContext);
 
         console.log(chatUser,"props.user")
          const parsedLoginUser = JSON.parse(localStorage.getItem('uid'));
-        const socket = socketIOClient(SOCKET_IO_URL);
+        const socket = socketIOClient(REACT_APP_SOCKET_IO_URL,{transports: ['websocket']});
         const listenTo =`${chatUser.receiver_id}${parsedLoginUser.id}`;  
         console.log(listenTo,"lis")
         if (chatUser.receiver_id !== null ) {  
